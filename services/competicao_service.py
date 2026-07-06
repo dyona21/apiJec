@@ -7,12 +7,9 @@ from schemas.competicao_schemas import CompeticaoCreate
 def criar_competicao(db: Session, competicao_data: CompeticaoCreate):
     ano_atual = datetime.now().year
 
-    # Regra 4 (Consistência Histórica): Não permitir cadastro de competições de anos futuros
-    # (Garante que em 2026 não sejam criados troféus de 2027+)
     if competicao_data.ano > ano_atual:
         raise HTTPException(status_code=400, detail=f"O ano da competição não pode ser superior ao ano atual ({ano_atual}).")
 
-    # Regra 4 (Fotos Obrigatórias): Garantir que o link da imagem não esteja vazio
     if not competicao_data.foto or competicao_data.foto.strip() == "":
         raise HTTPException(status_code=400, detail="O link da imagem/foto do troféu é obrigatório para manter o layout do site consistente.")
 

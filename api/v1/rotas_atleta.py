@@ -9,19 +9,8 @@ from schemas.atleta_schemas import AtletaComNomeResponse
 
 router = APIRouter()
 
-# ... (seu código do @router.post já existente) ...
-
-# @router.get("/", response_model=List[AtletaResponse])
-# def listar_elenco(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-#     """
-#     Busca a lista de todos os atletas que compõem o elenco atual.
-#     """
-#     return atleta_service.listar_atletas(db=db, skip=skip, limit=limit)
-
-# O response_model aqui é o que exige que o 'nome' venha na resposta
 @router.get("/", response_model=List[AtletaComNomeResponse])
 def listar_atletas_completos(db: Session = Depends(get_db)):
-    # Chama o service que faz o JOIN
     return atleta_service.listar_atletas_completos(db=db)
 
 @router.put("/{id_pessoa}", response_model=AtletaResponse)

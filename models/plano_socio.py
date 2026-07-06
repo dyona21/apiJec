@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Boolean, Date, DateTime, Numeric, Text, ForeignKey
 from sqlalchemy.orm import relationship
-from db.database import Base # Importando a fundação que criamos no passo anterior
+from db.database import Base 
 from typing import Optional
 
 class PlanoSocio(Base):

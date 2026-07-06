@@ -33,14 +33,11 @@ def deletar_socio(db: Session, socio_id: int):
     Remove o vínculo de sócio-torcedor de uma pessoa.
     O socio_id aqui é o próprio id_pessoa.
     """
-    # 1. Busca o sócio pelo ID
     socio = db.query(Socio).filter(Socio.id_pessoa == socio_id).first()
     
-    # 2. Se não existir, retorna erro 404
     if not socio:
         raise HTTPException(status_code=404, detail="Sócio não encontrado no sistema.")
         
-    # 3. Deleta o registro apenas da tabela 'socio'
     db.delete(socio)
     db.commit()
     
@@ -58,17 +55,13 @@ from sqlalchemy.orm import Session
 from models.socio import Socio
 
 def atualizar_plano_do_socio(db: Session, id_pessoa: int, novo_id_plano: int):
-    # 1. Busca o registro atual onde o id_pessoa é igual ao que o Angular mandou
     socio_existente = db.query(Socio).filter(Socio.id_pessoa == id_pessoa).first()
 
-    # 2. Se não achar, retorna None para a rota tratar
     if not socio_existente:
         return None
 
-    # 3. A mágica acontece aqui! Trocamos o valor antigo pelo novo (Ex: do 3 para o 4)
     socio_existente.id_plano = novo_id_plano
 
-    # 4. Salva a alteração no banco de dados
     db.commit()
     db.refresh(socio_existente)
 

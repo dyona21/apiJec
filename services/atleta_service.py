@@ -5,11 +5,9 @@ from models.pessoa import Pessoa
 from schemas.atleta_schemas import AtletaCreate
 
 def criar_atleta(db: Session, atleta_data: AtletaCreate):
-    # Regra 2 (Estatísticas Positivas): Nunca aceitar números negativos
     if atleta_data.partidas < 0:
         raise HTTPException(status_code=400, detail="O número de partidas não pode ser negativo.")
 
-    # Verifica se o atleta já está cadastrado para evitar duplicidade
     atleta_existente = db.query(Atleta).filter(Atleta.id_pessoa == atleta_data.id_pessoa).first()
     if atleta_existente:
         raise HTTPException(status_code=409, detail="Este usuário já está cadastrado como atleta do elenco.")
@@ -52,16 +50,13 @@ def atualizar_atleta(db: Session, id_pessoa: int, dados_atualizados: dict):
     """
     Atualiza as estatísticas ou informações de um atleta (ex: adicionar uma nova partida jogada).
     """
-    # 1. Busca o atleta pelo id_pessoa
     atleta = db.query(Atleta).filter(Atleta.id_pessoa == id_pessoa).first()
     if not atleta:
         raise HTTPException(status_code=404, detail="Atleta não encontrado no elenco.")
 
-    # 2. Regra de Negócio: Garantir que as estatísticas não fiquem negativas na atualização
     if "partidas" in dados_atualizados and dados_atualizados["partidas"] < 0:
         raise HTTPException(status_code=400, detail="O número de partidas não pode ser negativo.")
 
-    # 3. Atualiza os dados permitidos
     for chave, valor in dados_atualizados.items():
         setattr(atleta, chave, valor)
 

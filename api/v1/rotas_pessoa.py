@@ -12,10 +12,8 @@ from models.atleta import Atleta
 from models.socio import Socio
 from schemas.socio_schemas import LoginSocio
 
-# Instancia o roteador para este módulo
 router = APIRouter()
 
-# O response_model garante que a senha nunca seja enviada de volta na resposta
 @router.post("/", response_model=PessoaResponse, status_code=201)
 def criar_nova_pessoa(pessoa: PessoaCreate, db: Session = Depends(get_db)):
     """
@@ -30,12 +28,10 @@ def criar_nova_pessoa(pessoa: PessoaCreate, db: Session = Depends(get_db)):
     """
     return pessoa_service.criar_pessoa_jogador(db=db, pessoa_data=pessoa)
 
-# READ (Buscar Todos) - Retorna uma Lista (Array) de Pessoas
 @router.get("/", response_model=List[PessoaResponse])
 def listar_todas_pessoas(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return pessoa_service.listar_pessoas(db=db, skip=skip, limit=limit)
 
-# READ (Buscar por ID) - Repare no {pessoa_id} na URL
 @router.get("/{pessoa_id}", response_model=PessoaResponse)
 def buscar_pessoa(pessoa_id: int, db: Session = Depends(get_db)):
     pessoa = pessoa_service.buscar_pessoa_por_id(db=db, pessoa_id=pessoa_id)
@@ -43,23 +39,18 @@ def buscar_pessoa(pessoa_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Pessoa não encontrada.")
     return pessoa
 
-# UPDATE (Atualizar)
 @router.put("/{pessoa_id}", response_model=PessoaResponse)
 def atualizar_dados_pessoa(pessoa_id: int, pessoa_atualizada: PessoaCreate, db: Session = Depends(get_db)):
-    # Usamos .model_dump() do Pydantic para converter o schema em um dicionário Python
     dados = pessoa_atualizada.model_dump(exclude_unset=True)
     return pessoa_service.atualizar_pessoa(db=db, pessoa_id=pessoa_id, dados_atualizados=dados)
 
-# DELETE (Excluir)
 @router.delete("/{pessoa_id}", status_code=204)
 def deletar_cadastro_pessoa(pessoa_id: int, db: Session = Depends(get_db)):
-    # O status 204 (No Content) é o padrão REST quando deletamos algo com sucesso
     pessoa_service.deletar_pessoa(db=db, pessoa_id=pessoa_id)
     return None
 
 
 
-# Se você estiver usando o main.py direto, pode ser @app.post("/api/v1/socios/login")
 @router.post("/login")
 def validar_login(dados_login: LoginSocio, db: Session = Depends(get_db)):
     

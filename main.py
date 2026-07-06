@@ -3,23 +3,20 @@ from fastapi.middleware.cors import CORSMiddleware
 from core.config import settings
 from api.v1 import rotas_pessoa, rotas_atleta, rotas_partida, rotas_socio, rotas_competicao, rotas_plano_socio
 
-# 1. Cria o App UMA ÚNICA VEZ
 app = FastAPI(
     title=settings.PROJECT_NAME,
     description="API para gerenciamento do site oficial do JEC/Krona Futsal",
     version="1.0.0"
 )
 
-# 2. Adiciona o CORS imediatamente no app que acabou de ser criado
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:4200"], # A porta exata do seu Angular
+    allow_origins=["http://localhost:4200"], 
     allow_credentials=True,
-    allow_methods=["*"], # Permite GET, POST, PUT, DELETE
-    allow_headers=["*"], # Permite todos os cabeçalhos
+    allow_methods=["*"],
+    allow_headers=["*"], 
 )
 
-# 3. Adiciona todas as rotas
 app.include_router(rotas_pessoa.router, prefix=f"{settings.API_V1_STR}/pessoas", tags=["Pessoas"])
 app.include_router(rotas_atleta.router, prefix=f"{settings.API_V1_STR}/atletas", tags=["Elenco"])
 app.include_router(rotas_partida.router, prefix=f"{settings.API_V1_STR}/partidas", tags=["Calendário de Jogos"])
@@ -27,7 +24,6 @@ app.include_router(rotas_socio.router, prefix=f"{settings.API_V1_STR}/socios", t
 app.include_router(rotas_competicao.router, prefix=f"{settings.API_V1_STR}/competicoes", tags=["Sala de Troféus"])
 app.include_router(rotas_plano_socio.router, prefix=f"{settings.API_V1_STR}/planos", tags=["Planos de Sócio"])
 
-# 4. Rota de boas-vindas
 @app.get("/", tags=["Health Check"])
 async def root():
     return {

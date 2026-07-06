@@ -11,9 +11,9 @@ class PlanoSocioBase(BaseModel):
     forma_pagamento: Optional[str] = None
 
 class PlanoSocioCreate(PlanoSocioBase):
-    pass # Para criar, os dados da Base já são suficientes
+    pass 
 
 class PlanoSocioResponse(PlanoSocioBase):
-    id: int # O ID gerado pelo banco retorna aqui
+    id: int 
 
     model_config = ConfigDict(from_attributes=True)

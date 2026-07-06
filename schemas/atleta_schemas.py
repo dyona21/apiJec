@@ -22,7 +22,6 @@ class Config:
         from_attributes = True
 
 class AtletaCreate(AtletaBase):
-    # Para criar um atleta, precisamos saber qual é o ID da Pessoa dele
     id_pessoa: int 
 
 class AtletaResponse(AtletaBase):

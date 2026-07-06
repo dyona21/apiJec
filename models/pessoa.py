@@ -1,8 +1,7 @@
 from sqlalchemy import Column, Integer, String, Boolean, Date, DateTime, Numeric, Text, ForeignKey
 from sqlalchemy.orm import relationship
-from db.database import Base # Importando a fundação que criamos no passo anterior
+from db.database import Base 
 
-# 1. Tabelas Base
 class Pessoa(Base):
     __tablename__ = "pessoa"
 
@@ -14,6 +13,5 @@ class Pessoa(Base):
     data_nascimento = Column(Date, nullable=False)
     adm = Column(Boolean, default=False)
 
-    # Relacionamentos (Permite acessar jec.com/pessoa/1/atleta facilmente)
     atleta = relationship("Atleta", back_populates="pessoa", uselist=False)
     socio = relationship("Socio", back_populates="pessoa", uselist=False)
