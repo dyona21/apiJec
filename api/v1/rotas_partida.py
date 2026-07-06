@@ -25,13 +25,11 @@ def listar_todas_partidas(db: Session = Depends(get_db)):
 @router.put("/{partida_id}")
 def atualizar_partida(partida_id: int, partida_atualizada: PartidaCreate, db: Session = Depends(get_db)):
     
-    # 1. Busca a partida antiga no banco
     partida_banco = db.query(Partida).filter(Partida.id == partida_id).first()
     
     if not partida_banco:
         raise HTTPException(status_code=404, detail="Partida não encontrada.")
     
-    # 2. Atualiza os dados com o que veio do Angular
     partida_banco.adversario = partida_atualizada.adversario
     partida_banco.data_hora = partida_atualizada.data_hora
     partida_banco.local = partida_atualizada.local
@@ -41,7 +39,6 @@ def atualizar_partida(partida_id: int, partida_atualizada: PartidaCreate, db: Se
     partida_banco.descricao = partida_atualizada.descricao
     partida_banco.link_dos_lances = partida_atualizada.link_dos_lances
     
-    # 3. Salva a edição
     db.commit()
     db.refresh(partida_banco)
     return partida_banco
@@ -63,6 +60,5 @@ def deletar_partida(partida_id: int, db: Session = Depends(get_db)):
     """
     Exclui uma partida do sistema.
     """
-    # Passa a bola para o service fazer o trabalho sujo
     partida_service.deletar_partida(db=db, partida_id=partida_id)
     return None
